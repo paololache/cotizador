@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotización — Contratista de Construcción</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #1e3a5f;
+      --primary-light: #2c5282;
+      --accent: #e67e22;
+      --accent-hover: #d35400;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --text: #2c3e50;
+      --text-muted: #7f8c8d;
+      --border: #dce1e6;
+      --radius: 8px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── Header ─── */
+    .quote-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 3px solid var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .brand h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+    .brand p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+    }
+
+    .quote-meta {
+      text-align: right;
+    }
+    .quote-meta .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.4rem 1.2rem;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    .quote-meta small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ─── Form Grid ─── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+    }
+    .form-grid.three-col {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--card);
+      transition: border-color 0.2s ease;
+      outline: none;
+      width: 100%;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(30,58,95,0.1);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ─── Items Table ─── */
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    table thead {
+      background: var(--primary);
+      color: #fff;
+    }
+    table th {
+      padding: 0.7rem 0.6rem;
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    table th:last-child { text-align: center; }
+    table td {
+      padding: 0.4rem 0.4rem;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+    }
+    table td input,
+    table td select {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    table td input:focus,
+    table td select:focus {
+      border-color: var(--primary-light);
+    }
+    table td .item-total {
+      font-weight: 600;
+      color: var(--primary);
+      text-align: right;
+      display: block;
+      padding: 0.5rem 0.6rem;
+    }
+    table th:nth-child(3),
+    table th:nth-child(4),
+    table th:nth-child(5),
+    table th:nth-child(6),
+    table td:nth-child(3) input,
+    table td:nth-child(4) input,
+    table td:nth-child(5) input,
+    table td:nth-child(6) .item-total {
+      text-align: right;
+    }
+
+    .col-item { width: 4%; text-align: center !important; }
+    .col-desc { min-width: 180px; }
+    .col-unit { width: 10%; }
+    .col-qty { width: 10%; }
+    .col-price { width: 13%; }
+    .col-total { width: 13%; }
+    .col-action { width: 4%; text-align: center !important; }
+
+    .btn-remove {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.3rem;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+    }
+    .btn-remove:hover {
+      background: rgba(231,76,60,0.1);
+    }
+
+    .btn-add-item {
+      margin-top: 0.8rem;
+      padding: 0.55rem 1.2rem;
+      background: transparent;
+      border: 1.5px dashed var(--primary-light);
+      color: var(--primary-light);
+      border-radius: 6px;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-add-item:hover {
+      background: rgba(30,58,95,0.05);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ─── Summary ─── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .summary-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+    .summary-row .label {
+      color: var(--text-muted);
+    }
+    .summary-row .value {
+      font-weight: 600;
+    }
+    .summary-row.sub {
+      border-top: 1px solid var(--border);
+      margin-top: 0.3rem;
+      padding-top: 0.8rem;
+    }
+    .summary-row.discount { color: var(--danger); }
+    .summary-row.margin { color: var(--success); }
+    .summary-row.total {
+      border-top: 2px solid var(--primary);
+      margin-top: 0.3rem;
+      padding-top: 0.8rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .summary-row.total .value {
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+
+    .summary-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+    .control-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+    .control-row .form-group input {
+      text-align: right;
+      font-weight: 600;
+    }
+    .control-row .form-group input.positive { color: var(--success); }
+    .control-row .form-group input.negative { color: var(--danger); }
+
+    /* ─── Terms ─── */
+    .terms-section h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Buttons ─── */
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .btn {
+      padding: 0.75rem 1.8rem;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30,58,95,0.3);
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(230,126,34,0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+    }
+    .btn-outline:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+    .btn-danger {
+      background: transparent;
+      border: 1.5px solid var(--danger);
+      color: var(--danger);
+    }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* ─── Toast / Alerts ─── */
+    .toast-container {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toast {
+      padding: 0.9rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease;
+      max-width: 360px;
+    }
+    .toast.error { background: #fdedec; color: #82312b; border-left: 4px solid var(--danger); }
+    .toast.success { background: #eafaf1; color: #1a5f3a; border-left: 4px solid var(--success); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ─── Print ─── */
+    .no-print { display: block; }
+    .only-print { display: none; }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0.5in;
+        font-size: 11pt;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .no-print { display: none !important; }
+      .only-print { display: block !important; }
+      .btn, .btn-add-item, .btn-remove, .actions { display: none !important; }
+      table td input, table td select {
+        border: none;
+        padding: 0.2rem 0.4rem;
+        background: transparent;
+      }
+      table td input:focus { box-shadow: none; }
+      .form-group input, .form-group textarea {
+        border: none;
+        padding: 0.2rem 0;
+        background: transparent;
+      }
+      .summary-row.total { font-size: 1rem; }
+      .summary-row.total .value { font-size: 1.1rem; }
+      .quote-header { border-bottom-width: 2px; }
+      .container { max-width: 100%; }
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      body { padding: 1rem 0.5rem; }
+      .card { padding: 1rem; }
+      .quote-header { flex-direction: column; align-items: stretch; }
+      .quote-meta { text-align: left; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid.three-col { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .control-row { grid-template-columns: 1fr; }
+      table { font-size: 0.8rem; }
+      table th, table td { padding: 0.3rem 0.3rem; }
+      .col-desc { min-width: 120px; }
+      .actions { flex-direction: column; }
+      .actions .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="card">
+    <div class="quote-header">
+      <div class="brand">
+        <h1 contenteditable="true" id="companyName">Nombre de la Empresa</h1>
+        <p contenteditable="true" id="companyInfo">RUC / Dirección / Teléfono / Email</p>
+      </div>
+      <div class="quote-meta">
+        <div class="badge" id="quoteNumber">COT-001</div>
+        <small id="quoteDateDisplay"></small>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="clientName">Cliente</label>
+        <input type="text" id="clientName" placeholder="Nombre del cliente" />
+      </div>
+      <div class="form-group">
+        <label for="projectName">Proyecto / Obra</label>
+        <input type="text" id="projectName" placeholder="Nombre del proyecto" />
+      </div>
+      <div class="form-group">
+        <label for="quoteDate">Fecha de cotización</label>
+        <input type="date" id="quoteDate" />
+      </div>
+      <div class="form-group">
+        <label for="validity">Válidez de la cotización</label>
+        <select id="validity">
+          <option value="7">7 días</option>
+          <option value="15" selected>15 días</option>
+          <option value="30">30 días</option>
+          <option value="60">60 días</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ITEMS TABLE ═══ -->
+  <div class="card">
+    <h2 style="font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.3px;">
+      Partidas / Conceptos
+    </h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-item">#</th>
+            <th class="col-desc">Descripción</th>
+            <th class="col-unit">Unidad</th>
+            <th class="col-qty">Cantidad</th>
+            <th class="col-price">P. Unitario</th>
+            <th class="col-total">Total</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+        </tbody>
+      </table>
+    </div>
+    <button class="btn-add-item no-print" id="addItemBtn">
+      + Agregar partida
+    </button>
+  </div>
+
+  <!-- ═══ SUMMARY ═══ -->
+  <div class="card">
+    <div class="summary-grid">
+      <div class="summary-lines" id="summaryLines">
+        <div class="summary-row">
+          <span class="label">Subtotal</span>
+          <span class="value" id="subtotalDisplay">$0.00</span>
+        </div>
+        <div class="summary-row discount">
+          <span class="label">Descuento</span>
+          <span class="value" id="discountDisplay">-$0.00</span>
+        </div>
+        <div class="summary-row margin">
+          <span class="label">Margen de ganancia</span>
+          <span class="value" id="marginDisplay">+$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Subtotal con margen</span>
+          <span class="value" id="afterMarginDisplay">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">IVA / Impuesto</span>
+          <span class="value" id="taxDisplay">+$0.00</span>
+        </div>
+        <div class="summary-row total">
+          <span class="label">TOTAL</span>
+          <span class="value" id="grandTotalDisplay">$0.00</span>
+        </div>
+      </div>
+      <div class="summary-controls">
+        <div class="control-row">
+          <div class="form-group">
+            <label for="discountPercent">Descuento (%)</label>
+            <input type="number" id="discountPercent" class="negative" min="0" max="100" step="0.01" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="marginPercent">Margen de ganancia (%)</label>
+            <input type="number" id="marginPercent" class="positive" min="0" max="200" step="0.01" value="0" />
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="form-group">
+            <label for="taxPercent">IVA / Impuesto (%)</label>
+            <input type="number" id="taxPercent" min="0" max="100" step="0.01" value="18" />
+          </div>
+          <div class="form-group">
+            <label for="currencySymbol">Moneda</label>
+            <select id="currencySymbol">
+              <option value="$">$ — USD / Soles</option>
+              <option value="€">€ — Euro</option>
+              <option value="Bs">Bs — Bolivianos</option>
+              <option value="COP $">COP $ — Pesos</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);" class="no-print">
+      <div class="actions">
+        <button class="btn btn-accent" id="printBtn">
+          🖨 Imprimir / PDF
+        </button>
+        <button class="btn btn-primary" id="saveBtn">
+          💾 Guardar cotización
+        </button>
+        <button class="btn btn-outline" id="addSampleBtn">
+          📋 Cargar datos de ejemplo
+        </button>
+        <button class="btn btn-danger" id="resetBtn">
+          ✕ Nueva cotización
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TERMS ═══ -->
+  <div class="card">
+    <div class="terms-section">
+      <h3>Términos y condiciones</h3>
+      <div class="form-group">
+        <textarea id="termsText" rows="3" placeholder="Ej: Forma de pago, plazo de entrega, garantía, condiciones...">Forma de pago: 50% anticipo, 50% contra entrega.
+Plazo de entrega: 30 días calendario desde la firma.
+Garantía: 6 meses por mano de obra.
+Esta cotización tiene una validez de 15 días.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <div class="only-print" style="text-align:center;margin-top:1rem;color:var(--text-muted);font-size:0.75rem;">
+    Documento generado electrónicamente — Cotización válida solo con firma y sello.
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    'use strict';
+
+    // ─── State ───
+    let itemCount = 0;
+    const CURRENCY_LOCALE = 'en-US';
+
+    // ─── DOM refs ───
+    const itemsBody = document.getElementById('itemsBody');
+    const addItemBtn = document.getElementById('addItemBtn');
+    const printBtn = document.getElementById('printBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const addSampleBtn = document.getElementById('addSampleBtn');
+
+    const subtotalDisplay = document.getElementById('subtotalDisplay');
+    const discountDisplay = document.getElementById('discountDisplay');
+    const marginDisplay = document.getElementById('marginDisplay');
+    const afterMarginDisplay = document.getElementById('afterMarginDisplay');
+    const taxDisplay = document.getElementById('taxDisplay');
+    const grandTotalDisplay = document.getElementById('grandTotalDisplay');
+
+    const discountInput = document.getElementById('discountPercent');
+    const marginInput = document.getElementById('marginPercent');
+    const taxInput = document.getElementById('taxPercent');
+    const currencySelect = document.getElementById('currencySymbol');
+    const quoteDateInput = document.getElementById('quoteDate');
+    const quoteDateDisplay = document.getElementById('quoteDateDisplay');
+    const quoteNumberInput = document.getElementById('quoteNumber');
+    const clientNameInput = document.getElementById('clientName');
+    const projectNameInput = document.getElementById('projectName');
+    const validitySelect = document.getElementById('validity');
+    const companyName = document.getElementById('companyName');
+    const companyInfo = document.getElementById('companyInfo');
+    const termsText = document.getElementById('termsText');
+
+    const toastContainer = document.getElementById('toastContainer');
+
+    // ─── Init date ───
+    function setDefaultDate() {
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, '0');
+      const d = String(today.getDate()).padStart(2, '0');
+      quoteDateInput.value = `${y}-${m}-${d}`;
+    }
+    if (!quoteDateInput.value) setDefaultDate();
+    updateDateDisplay();
+
+    // ─── Format ───
+    function fmt(n) {
+      var currency = currencySelect ? currencySelect.value : '$';
+      return currency + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function parseVal(v) {
+      var n = parseFloat(v);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function roundTo(n) {
+      return Math.round(n * 100) / 100;
+    }
+
+    // ─── Date display ───
+    function updateDateDisplay() {
+      var d = quoteDateInput.value;
+      if (d) {
+        var parts = d.split('-');
+        var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        quoteDateDisplay.textContent = parts[2] + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+      }
+    }
+    quoteDateInput.addEventListener('change', updateDateDisplay);
+
+    // ─── Generate quote number ───
+    function generateQuoteNumber() {
+      var now = new Date();
+      var prefix = 'COT-';
+      var num = String(now.getFullYear()).slice(-2);
+      num += String(now.getMonth() + 1).padStart(2, '0');
+      num += String(now.getDate()).padStart(2, '0');
+      num += '-';
+      num += String(Math.floor(Math.random() * 900) + 100);
+      return prefix + num;
+    }
+    if (!quoteNumberInput.textContent || quoteNumberInput.textContent === 'COT-001') {
+      quoteNumberInput.textContent = generateQuoteNumber();
+    }
+
+    // ─── Add Item ───
+    function createItemRow(index, data) {
+      data = data || {};
+      var tr = document.createElement('tr');
+      tr.dataset.index = index;
+
+      var units = ['Und','m²','m³','m','kg','Lote','Glb','Hora','Día','Semana','Mes'];
+      var unitOptions = units.map(function(u) {
+        return '<option value="' + u + '"' + (u === (data.unit || 'Und') ? ' selected' : '') + '>' + u + '</option>';
+      }).join('');
+
+      tr.innerHTML =
+        '<td style="text-align:center;font-weight:600;color:var(--text-muted);">' + index + '</td>' +
+        '<td><input type="text" class="item-desc" value="' + (data.desc || '') + '" placeholder="Ej: Excavación, encofrado, etc." /></td>' +
+        '<td><select class="item-unit">' + unitOptions + '</select></td>' +
+        '<td><input type="number" class="item-qty" min="0" step="0.01" value="' + (data.qty || '1') + '" /></td>' +
+        '<td><input type="number" class="item-price" min="0" step="0.01" value="' + (data.price || '0') + '" /></td>' +
+        '<td><span class="item-total">' + fmt(0) + '</span></td>' +
+        '<td><button class="btn-remove no-print" title="Eliminar">✕</button></td>';
+
+      var inputs = tr.querySelectorAll('input, select');
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener('input', function() {
+          calculateRow(tr);
+          calculateAll();
+        });
+        inputs[i].addEventListener('change', function() {
+          calculateRow(tr);
+          calculateAll();
+        });
+      }
+
+      tr.querySelector('.btn-remove').addEventListener('click', function() {
+        if (itemsBody.children.length <= 1) {
+          showToast('Debe haber al menos una partida.', 'error');
+          return;
+        }
+        tr.remove();
+        renumber();
+        calculateAll();
+      });
+
+      return tr;
+    }
+
+    function calculateRow(tr) {
+      var qty = parseVal(tr.querySelector('.item-qty').value);
+      var price = parseVal(tr.querySelector('.item-price').value);
+      var total = roundTo(qty * price);
+      tr.querySelector('.item-total').textContent = fmt(total);
+    }
+
+    function renumber() {
+      var rows = itemsBody.querySelectorAll('tr');
+      for (var i = 0; i < rows.length; i++) {
+        var td = rows[i].querySelector('td:first-child');
+        if (td) td.textContent = i + 1;
+        rows[i].dataset.index = i + 1;
+      }
+      itemCount = rows.length;
+    }
+
+    function addItem(data) {
+      itemCount++;
+      var tr = createItemRow(itemCount, data);
+      itemsBody.appendChild(tr);
+      if (data) calculateRow(tr);
+      calculateAll();
+    }
+
+    addItemBtn.addEventListener('click', function() {
+      addItem();
+      var lastRow = itemsBody.lastElementChild;
+      if (lastRow) {
+        var desc = lastRow.querySelector('.item-desc');
+        if (desc) setTimeout(function() { desc.focus(); }, 50);
+      }
+    });
+
+    // ─── Calculate all ───
+    function calculateAll() {
+      var rows = itemsBody.querySelectorAll('tr');
+      var subtotal = 0;
+      for (var i = 0; i < rows.length; i++) {
+        var totalText = rows[i].querySelector('.item-total').textContent;
+        var num = parseFloat(totalText.replace(/[^0-9.\-]/g, ''));
+        subtotal += isNaN(num) ? 0 : num;
+      }
+      subtotal = roundTo(subtotal);
+
+      var discountPct = parseVal(discountInput.value);
+      var marginPct = parseVal(marginInput.value);
+      var taxPct = parseVal(taxInput.value);
+
+      var discountAmount = roundTo(subtotal * (discountPct / 100));
+      var afterDiscount = roundTo(subtotal - discountAmount);
+      var marginAmount = roundTo(afterDiscount * (marginPct / 100));
+      var afterMargin = roundTo(afterDiscount + marginAmount);
+      var taxAmount = roundTo(afterMargin * (taxPct / 100));
+      var grandTotal = roundTo(afterMargin + taxAmount);
+
+      subtotalDisplay.textContent = fmt(subtotal);
+      discountDisplay.textContent = '-' + fmt(discountAmount);
+      marginDisplay.textContent = '+' + fmt(marginAmount);
+      afterMarginDisplay.textContent = fmt(afterMargin);
+      taxDisplay.textContent = '+' + fmt(taxAmount);
+      grandTotalDisplay.textContent = fmt(grandTotal);
+
+      if (grandTotal < 0) grandTotal = 0;
+    }
+
+    // ─── Input listeners for summary ───
+    [discountInput, marginInput, taxInput, currencySelect].forEach(function(el) {
+      el.addEventListener('input', calculateAll);
+      el.addEventListener('change', calculateAll);
+    });
+
+    // ─── Print ───
+    printBtn.addEventListener('click', function() {
+      calculateAll();
+      window.print();
+    });
+
+    // ─── Save / localStorage ───
+    function saveQuote() {
+      var data = gatherData();
+      try {
+        localStorage.setItem('constructionQuote', JSON.stringify(data));
+        showToast('Cotización guardada correctamente.', 'success');
+      } catch(e) {
+        showToast('Error al guardar la cotización.', 'error');
+      }
+    }
+
+    function gatherData() {
+      var items = [];
+      var rows = itemsBody.querySelectorAll('tr');
+      for (var i = 0; i < rows.length; i++) {
+        items.push({
+          desc: rows[i].querySelector('.item-desc').value,
+          unit: rows[i].querySelector('.item-unit').value,
+          qty: rows[i].querySelector('.item-qty').value,
+          price: rows[i].querySelector('.item-price').value
+        });
+      }
+      return {
+        companyName: companyName.textContent,
+        companyInfo: companyInfo.textContent,
+        quoteNumber: quoteNumberInput.textContent,
+        clientName: clientNameInput.value,
+        projectName: projectNameInput.value,
+        quoteDate: quoteDateInput.value,
+        validity: validitySelect.value,
+        terms: termsText.value,
+        discount: discountInput.value,
+        margin: marginInput.value,
+        tax: taxInput.value,
+        currency: currencySelect.value,
+        items: items
+      };
+    }
+
+    saveBtn.addEventListener('click', saveQuote);
+
+    // ─── Reset / New Quote ───
+    resetBtn.addEventListener('click', function() {
+      if (!confirm('¿Estás seguro? Se borrarán todos los datos actuales.')) return;
+
+      itemsBody.innerHTML = '';
+      addItem({ desc: '', qty: 1, price: 0 });
+
+      clientNameInput.value = '';
+      projectNameInput.value = '';
+      setDefaultDate();
+      updateDateDisplay();
+      quoteNumberInput.textContent = generateQuoteNumber();
+      discountInput.value = '0';
+      marginInput.value = '0';
+      taxInput.value = '18';
+      termsText.value = 'Forma de pago: 50% anticipo, 50% contra entrega.\nPlazo de entrega: 30 días calendario desde la firma.\nGarantía: 6 meses por mano de obra.\nEsta cotización tiene una validez de 15 días.';
+
+      calculateAll();
+      showToast('Nueva cotización iniciada.', 'success');
+    });
+
+    // ─── Load sample data ───
+    addSampleBtn.addEventListener('click', function() {
+      itemsBody.innerHTML = '';
+      addItem({ desc: 'Excavación manual de zanjas (h=1.00m)', unit: 'm³', qty: 12, price: 45.00 });
+      addItem({ desc: 'Concreto fc=210 kg/cm² para cimientos', unit: 'm³', qty: 8, price: 520.00 });
+      addItem({ desc: 'Acero de refuerzo fy=4200 kg/cm²', unit: 'kg', qty: 450, price: 4.50 });
+      addItem({ desc: 'Encofrado de madera para vigas y columnas', unit: 'm²', qty: 65, price: 38.00 });
+      addItem({ desc: 'Muro de ladrillo KK 18 huecos', unit: 'm²', qty: 120, price: 55.00 });
+      addItem({ desc: 'Tarrajeo de muros interiores', unit: 'm²', qty: 200, price: 28.00 });
+      addItem({ desc: 'Instalaciones eléctricas (puntos)', unit: 'Und', qty: 30, price: 85.00 });
+      addItem({ desc: 'Instalaciones sanitarias (puntos)', unit: 'Und', qty: 20, price: 95.00 });
+
+      clientNameInput.value = 'Constructora Los Andes S.A.C.';
+      projectNameInput.value = 'Edificio Multifamiliar — San Isidro';
+      discountInput.value = '0';
+      marginInput.value = '15';
+      taxInput.value = '18';
+
+      calculateAll();
+      showToast('Datos de ejemplo cargados.', 'success');
+    });
+
+    // ─── Toast ───
+    function showToast(msg, type) {
+      var toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.textContent = msg;
+      toastContainer.appendChild(toast);
+      setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 3500);
+    }
+
+    // ─── Init first row ───
+    addItem({ desc: '', qty: 1, price: 0 });
+    calculateAll();
+
+    // ─── Keyboard shortcut: Ctrl+Enter to add item ───
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        addItemBtn.click();
+      }
+    });
+
+  })();
+</script>
+
+</body>
+</html>
