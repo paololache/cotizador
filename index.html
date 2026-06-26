@@ -2,12 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <title>Cotización — Contratista de Construcción</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     :root {
       --primary: #1e3a5f;
@@ -24,6 +26,10 @@
       --radius: 8px;
       --shadow: 0 2px 12px rgba(0,0,0,0.08);
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
     }
 
     body {
@@ -32,6 +38,12 @@
       color: var(--text);
       line-height: 1.5;
       padding: 2rem 1rem;
+      padding-top: calc(2rem + var(--safe-top));
+      padding-bottom: calc(2rem + var(--safe-bottom));
+      padding-left: calc(1rem + var(--safe-left));
+      padding-right: calc(1rem + var(--safe-right));
+      overscroll-behavior: none;
+      -webkit-text-size-adjust: 100%;
     }
 
     .container {
@@ -136,9 +148,15 @@
       min-height: 60px;
     }
 
+    input, select, textarea, button { touch-action: manipulation; }
+
     input[type="number"] { -moz-appearance: textfield; }
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    @supports (-webkit-touch-callout: none) {
+      input, select, textarea { font-size: 16px !important; }
+    }
 
     .full-width {
       grid-column: 1 / -1;
@@ -147,7 +165,11 @@
     /* ─── Items Table ─── */
     .table-wrap {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
     }
+    .table-wrap::-webkit-scrollbar { height: 4px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -230,10 +252,9 @@
       width: 28px;
       height: 28px;
     }
-    .btn-remove:hover {
-      background: rgba(231,76,60,0.1);
+    @media (max-width: 768px) {
+      .btn-remove { width: 36px; height: 36px; font-size: 1.2rem; }
     }
-
     .btn-add-item {
       margin-top: 0.8rem;
       padding: 0.55rem 1.2rem;
@@ -250,12 +271,6 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .btn-add-item:hover {
-      background: rgba(30,58,95,0.05);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
     /* ─── Summary ─── */
     .summary-grid {
       display: grid;
@@ -351,37 +366,35 @@
       background: var(--primary);
       color: #fff;
     }
-    .btn-primary:hover {
-      background: var(--primary-light);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(30,58,95,0.3);
-    }
     .btn-accent {
       background: var(--accent);
       color: #fff;
-    }
-    .btn-accent:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(230,126,34,0.3);
     }
     .btn-outline {
       background: transparent;
       border: 1.5px solid var(--border);
       color: var(--text-muted);
     }
-    .btn-outline:hover {
-      border-color: var(--text-muted);
-      color: var(--text);
-    }
     .btn-danger {
       background: transparent;
       border: 1.5px solid var(--danger);
       color: var(--danger);
     }
-    .btn-danger:hover {
-      background: var(--danger);
-      color: #fff;
+
+    .btn:active { transform: scale(0.97); }
+    .btn-primary:active { background: var(--primary-light); }
+    .btn-accent:active { background: var(--accent-hover); }
+    .btn-danger:active { background: var(--danger); color: #fff; }
+    .btn-add-item:active { background: rgba(30,58,95,0.08); border-color: var(--primary); color: var(--primary); }
+    .btn-remove:active { background: rgba(231,76,60,0.15); }
+
+    @media (hover: hover) {
+      .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,58,95,0.3); }
+      .btn-accent:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(230,126,34,0.3); }
+      .btn-outline:hover { border-color: var(--text-muted); color: var(--text); }
+      .btn-danger:hover { background: var(--danger); color: #fff; }
+      .btn-add-item:hover { background: rgba(30,58,95,0.05); border-color: var(--primary); color: var(--primary); }
+      .btn-remove:hover { background: rgba(231,76,60,0.1); }
     }
 
     /* ─── Toast / Alerts ─── */
@@ -393,6 +406,8 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      top: calc(1.5rem + var(--safe-top));
+      right: calc(1.5rem + var(--safe-right));
     }
     .toast {
       padding: 0.9rem 1.2rem;
@@ -448,19 +463,67 @@
 
     /* ─── Responsive ─── */
     @media (max-width: 768px) {
-      body { padding: 1rem 0.5rem; }
-      .card { padding: 1rem; }
-      .quote-header { flex-direction: column; align-items: stretch; }
+      body { padding: 0.75rem 0.5rem; }
+      .card { padding: 0.75rem; margin-bottom: 1rem; }
+      .quote-header { flex-direction: column; align-items: stretch; gap: 1rem; }
       .quote-meta { text-align: left; }
-      .form-grid { grid-template-columns: 1fr; }
+      .brand h1 { font-size: 1.3rem; }
+      .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
       .form-grid.three-col { grid-template-columns: 1fr; }
-      .summary-grid { grid-template-columns: 1fr; }
-      .control-row { grid-template-columns: 1fr; }
-      table { font-size: 0.8rem; }
-      table th, table td { padding: 0.3rem 0.3rem; }
-      .col-desc { min-width: 120px; }
+      .summary-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .control-row { grid-template-columns: 1fr; gap: 0.6rem; }
+      table { font-size: 0.78rem; }
+      table th, table td { padding: 0.3rem 0.25rem; }
+      .col-desc { min-width: 100px; }
+      .col-unit { width: 12%; }
+      .col-qty { width: 12%; }
+      .col-price { width: 14%; }
+      .col-total { width: 14%; }
       .actions { flex-direction: column; }
-      .actions .btn { justify-content: center; }
+      .actions .btn { justify-content: center; width: 100%; padding: 0.85rem 1rem; min-height: 48px; }
+      .summary-row.total { font-size: 1rem; }
+      .summary-row.total .value { font-size: 1.15rem; }
+      .toast-container { top: 0.75rem; right: 0.75rem; left: 0.75rem; }
+      .toast { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.5rem 0.25rem; }
+      .card { padding: 0.6rem; margin-bottom: 0.75rem; border-radius: 6px; }
+      .brand h1 { font-size: 1.1rem; }
+      .brand p { font-size: 0.75rem; }
+      .quote-meta .badge { font-size: 0.85rem; padding: 0.3rem 0.8rem; }
+      table { font-size: 0.72rem; }
+      table th { padding: 0.5rem 0.2rem; font-size: 0.65rem; }
+      table td { padding: 0.25rem 0.15rem; }
+      table td input, table td select { padding: 0.4rem 0.3rem; font-size: 0.75rem; }
+      .col-desc { min-width: 80px; }
+      .col-unit { width: 14%; }
+      .col-qty { width: 13%; }
+      .col-price { width: 15%; }
+      .col-total { width: 15%; }
+      .summary-row { font-size: 0.8rem; padding: 0.35rem 0; }
+      .summary-row.total .value { font-size: 1rem; }
+      .btn { padding: 0.75rem 0.8rem; font-size: 0.82rem; min-height: 44px; }
+      .btn-add-item { width: 100%; justify-content: center; padding: 0.7rem 0.8rem; }
+      .form-group input, .form-group textarea, .form-group select { padding: 0.55rem 0.6rem; }
+      .terms-section h3 { font-size: 0.78rem; }
+      .table-wrap { margin: 0 -0.6rem; }
+      .table-wrap table { min-width: 480px; }
+    }
+
+    @media (max-width: 380px) {
+      table { font-size: 0.65rem; }
+      table th { font-size: 0.6rem; padding: 0.4rem 0.15rem; }
+      table td { padding: 0.2rem 0.1rem; }
+      table td input, table td select { padding: 0.35rem 0.2rem; }
+      .col-desc { min-width: 70px; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .card { padding: 1.5rem; }
+      .form-grid { gap: 0.8rem 1.5rem; }
+      .control-row { gap: 0.6rem; }
     }
   </style>
 </head>
